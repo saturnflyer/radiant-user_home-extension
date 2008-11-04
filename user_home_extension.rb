@@ -34,10 +34,18 @@ class UserHomeExtension < Radiant::Extension
       end
       alias_method_chain :index, :preference
     end
+    ApplicationController.class_eval do
+      before_filter :announce_user_home_status
+      def announce_user_home_status
+        unless User.instance_methods.include?('home_path')
+          flash[:error] = "The user_home extension is not installed properly. Have an administrator check the documentation to remove this error."
+        end
+      end
+    end
     
-    admin.user.edit.add :form, 'home_path'
-    if admin.respond_to?(:preferences)
-      admin.preferences.form.add 'home_path'
+    if User.instance_methods.include?('home_path')
+      admin.user.edit.add :form, 'home_path'
+      admin.user.preferences.add :form, 'home_path' if admin.user.respond_to?(:preferences)
     end
   end
   
