@@ -8,13 +8,15 @@ class UserHomeExtension < Radiant::Extension
   
   def activate
     User.class_eval do
-      before_save :check_home_path
+      before_save :check_home_path if respond_to?(:home_path)
       validates_format_of :home_path, :with => %r{^([-_.A-Za-z0-9\/]*|/)$}, :message => 'invalid format'
       
       private
       def check_home_path
-        if home_path.match(/^\/?admin\/?$/)
-          self[:home_path] = nil
+        unless home_path.blank?
+          if home_path.match(/^\/?admin\/?$/)
+            self[:home_path] = nil
+          end
         end
       end
     end
