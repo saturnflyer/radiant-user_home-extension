@@ -44,8 +44,8 @@ class UserHomeExtension < Radiant::Extension
     end
     
     if User.new.respond_to?(:home_path)
-      admin.user.edit.add :form, 'home_path'
-      admin.user.preferences.add :form, 'home_path' if admin.user.respond_to?(:preferences)
+      admin.users.edit.add :form, 'home_path'
+      admin.users.preferences.add :form, 'admin/users/home_path' if admin.user.respond_to?(:preferences)
     end
   end
   
